@@ -1,0 +1,96 @@
+# ==========================
+# Generales
+# ==========================
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# ==========================
+# IDEs y entornos
+# ==========================
+
+# Android Studio / IntelliJ
+*.iml
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/**/contentModel.xml
+.idea/**/libraries
+.idea/**/gradle.xml
+.idea/**/modules.xml
+.idea/**/modules
+.idea/caches
+.idea/vcs.xml
+.idea/httpRequests
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# ==========================
+# Flutter / Dart
+# ==========================
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+coverage/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# ==========================
+# Archivos locales / confidenciales
+# ==========================
+.env
+.env.*
+key.properties
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+!.env.example
+
+# ==========================
+# Android específicos
+# ==========================
+/android/.gradle/
+/android/captures/
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+/android/key.properties
+/android/local.properties
+/android/app/.cxx/
+
+# ==========================
+# iOS específicos
+# ==========================
+ios/.generated/
+ios/Pods/
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+ios/Runner.xcworkspace/
+ios/Podfile.lock
+ios/.symlinks/
+
+# ==========================
+# Archivos de build
+# ==========================
+app.*.map.json
+app.*.symbols
