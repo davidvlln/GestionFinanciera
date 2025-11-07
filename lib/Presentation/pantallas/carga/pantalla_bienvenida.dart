@@ -61,6 +61,8 @@ class PantallaBienvenida extends StatelessWidget {
                     color: Colors.black54,
                   ),
                 ),
+                const SizedBox(height: 30),
+                const CircularProgressIndicator(),
               ],
             ),
           ),

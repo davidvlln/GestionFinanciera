@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'Core/constants/api_Key.dart';
-import 'Presentation/pantallas/pantalla_inicio.dart';
+import 'Presentation/pantallas/seguridad/pantalla_validacion.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +22,7 @@ class MiAplicacion extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: const Color(0xfff8f9ff),
       ),
-      home: const PantallaInicio(),
+      home: const PantallaValidacion(),
     );
   }
 }
