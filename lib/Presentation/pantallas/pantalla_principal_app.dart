@@ -1,13 +1,16 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:Caney/Core/utils/app_colors.dart';
+
+import './seguridad/pantalla_acceso.dart';
+
 import '../componentes/app/Persistentes/drawe_personalizado.dart';
 import '../componentes/app/Persistentes/barra_superior_personalizada.dart';
+
 import './app/pantalla_inicio_app.dart';
 import './app/pantalla_estadisticas.dart';
 import './app/pantalla_perfil.dart';
 import './app/pantalla_agregar_registro.dart';
-import './seguridad/pantalla_acceso.dart';
-import 'package:Caney/Core/utils/app_colors.dart';
 
 class PantallaPrincipalApp extends StatefulWidget {
   const PantallaPrincipalApp({super.key});
@@ -27,7 +30,7 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
 
   static final List<Color> _coloresDeFondo = <Color>[
     AppColors.Transparent,
-    Colors.blue,
+    Color(0xFF22C5A1),
     const Color(0xFF4A148C),
     Colors.orange,
   ];
@@ -37,6 +40,13 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
     Colors.white,
     Colors.white,
     Colors.white,
+  ];
+
+  static const List<double> _height = <double>[
+    75.0,
+    75.0,
+    75.0,
+    75.0,
   ];
 
   void _onItemTapped(int index) {
@@ -55,7 +65,7 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
       appBar: BarraSuperiorPersonalizada(
         title: _selectedIndex == 0 ? null : titulos[_selectedIndex],
         nombreCliente: _selectedIndex == 0 ? 'Carlos' : null,
-        height: _selectedIndex == 0 ? 75.0 : kToolbarHeight,
+        height: _height[_selectedIndex],
         alineacion: _selectedIndex == 0 ? AlineacionBarra.centro : AlineacionBarra.centro,
         backgroundColor: _coloresDeFondo[_selectedIndex],
         foregroundColor: _coloresDeTexto[_selectedIndex],
@@ -88,6 +98,7 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
+        color: AppColors.Blanco,
         child: SizedBox(
           height: 60.0,
           child: Row(
