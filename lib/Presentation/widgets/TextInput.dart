@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestfinan/Core/utils/app_colors.dart';
+import 'package:Caney/Core/utils/app_colors.dart';
 
 class InputText extends StatelessWidget {
   final String placeholder;
