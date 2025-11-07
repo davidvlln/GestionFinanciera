@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:Caney/Core/utils/app_colors.dart';
+
 import '../../componentes/estadisticas/selector_periodo.dart';
 import '../../componentes/estadisticas/grafico_estadisticas.dart';
 import '../../componentes/estadisticas/item_historial.dart';
@@ -9,7 +11,7 @@ class PantallaEstadisticas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF22C5A1),
+      backgroundColor: AppColors.Verde40,
       body: Stack(
         children: [
           const Column(

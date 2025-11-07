@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Caney/Core/utils/app_colors.dart';
 
 class ItemTransaccion extends StatelessWidget {
   final IconData icono;
@@ -21,7 +22,7 @@ class ItemTransaccion extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A4D5D),
+        color: AppColors.Verde70,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Caney/Core/utils/app_colors.dart';
 
 class TarjetaCredito extends StatelessWidget {
   const TarjetaCredito({super.key});
@@ -11,7 +12,7 @@ class TarjetaCredito extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF1A4D5D),
+              color: AppColors.Verde70,
               borderRadius: BorderRadius.circular(25),
             ),
           ),
@@ -58,7 +59,7 @@ class TarjetaCredito extends StatelessWidget {
           Positioned(
             top: 20,
             right: 25,
-            child: Text('07/11/2025', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+            child: Text('07/11/2025', style: TextStyle(color: Colors.white.withOpacity(0.7))),
           ),
         ],
       ),

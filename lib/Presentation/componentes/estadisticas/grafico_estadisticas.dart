@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:Caney/Core/utils/app_colors.dart';
 
 class GraficoEstadisticas extends StatelessWidget {
   const GraficoEstadisticas({super.key});
@@ -36,7 +37,7 @@ class GraficoEstadisticas extends StatelessWidget {
                 const FlSpot(6, 200.80),
                 const FlSpot(7, 300.80),
               ],
-              const Color(0xFFFACC15),
+              const Color(0xFFF24822),
             ),
           ],
           lineTouchData: LineTouchData(
