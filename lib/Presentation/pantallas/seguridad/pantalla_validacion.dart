@@ -1,8 +1,8 @@
 import 'package:Caney/Presentation/pantallas/carga/pantalla_bienvenida.dart';
+import 'package:Caney/Presentation/pantallas/pantalla_principal_app.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'pantalla_acceso.dart'; // <-- Cambio aquí
-import '../pantalla_principal_app.dart';
+import 'pantalla_acceso.dart';
 
 class PantallaValidacion extends StatefulWidget {
   const PantallaValidacion({super.key});
@@ -21,7 +21,7 @@ class _PantallaValidacionState extends State<PantallaValidacion> {
   }
 
   Future<void> _redirigir() async {
-    await Future.delayed(const Duration(milliseconds: 2500)); // Aumentado para que se vea el splash
+    await Future.delayed(const Duration(milliseconds: 2500));
 
     if (!mounted) return;
 
