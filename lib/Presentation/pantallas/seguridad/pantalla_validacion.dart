@@ -33,14 +33,13 @@ class _PantallaValidacionState extends State<PantallaValidacion> {
       );
     } else {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const PantallaAcceso()), // <-- Cambio aquí
+        MaterialPageRoute(builder: (context) => const PantallaAcceso()),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Usamos la pantalla de bienvenida como "splash screen" durante la validación
     return const PantallaBienvenida();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../componentes/acceso/boton_principal.dart';
+import '../pantalla_principal_app.dart'; // Asegurarse de que este import esté presente
 import 'pantalla_registro.dart';
 import 'package:Caney/generated/assets.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
@@ -134,12 +135,17 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                             BotonPrincipal(
                               texto: 'Acceder',
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Procesando datos...')),
-                                  );
-                                  // Logica aqui Juanii
-                                }
+                                // --- Descomenta esto ---
+                                // Se comenta la validación y se añade la navegación directa
+                                // if (_formKey.currentState!.validate()) {
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     const SnackBar(content: Text('Procesando datos...')),
+                                //   );
+                                // }
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const PantallaPrincipalApp()),
+                                );
                               },
                             ),
                             const SizedBox(height: 20),
@@ -171,7 +177,6 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
     );
   }
 
-  // Método auxiliar para no repetir el estilo de la decoración
   InputDecoration _buildInputDecoration({required String hintText, required IconData icon}) {
     return InputDecoration(
       hintText: hintText,
