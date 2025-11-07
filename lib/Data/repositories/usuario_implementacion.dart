@@ -1,10 +1,12 @@
 import 'package:gestfinan/Data/models/usuario_model.dart';
 import '../services/usuario_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../Core/errors/error_ common.dart';
+import '../../Core/errors/error_common.dart';
 
 class UsuarioImp implements IUsuarioServ {
-  final dataSource = Supabase.instance.client;
+  final dynamic dataSource;
+
+  UsuarioImp({dynamic dataSourceClient}) : dataSource = dataSourceClient ?? Supabase.instance.client;
 
   @override
   Future<UsuarioResponse> getUsuario() async {
