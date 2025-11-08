@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:Caney/Core/utils/app_colors.dart';
 
 class GraficoEstadisticas extends StatelessWidget {
   const GraficoEstadisticas({super.key});
@@ -15,30 +14,24 @@ class GraficoEstadisticas extends StatelessWidget {
           titlesData: const FlTitlesData(show: false),
           borderData: FlBorderData(show: false),
           lineBarsData: [
-            _buildLineChartBarData(
-              [
-                const FlSpot(1, 300),
-                const FlSpot(2, 200),
-                const FlSpot(3, 500),
-                const FlSpot(4, 300.50),
-                const FlSpot(5, 400),
-                const FlSpot(6, 300),
-                const FlSpot(7, 400),
-              ],
-              Colors.white.withOpacity(0.7),
-            ),
-            _buildLineChartBarData(
-              [
-                const FlSpot(1, 100.50),
-                const FlSpot(2, 200.80),
-                const FlSpot(3, 200.0),
-                const FlSpot(4, 400.50),
-                const FlSpot(5, 300.50),
-                const FlSpot(6, 200.80),
-                const FlSpot(7, 300.80),
-              ],
-              const Color(0xFFF24822),
-            ),
+            _buildLineChartBarData([
+              const FlSpot(1, 300),
+              const FlSpot(2, 200),
+              const FlSpot(3, 500),
+              const FlSpot(4, 300.50),
+              const FlSpot(5, 400),
+              const FlSpot(6, 300),
+              const FlSpot(7, 400),
+            ], Colors.white.withOpacity(0.7)),
+            _buildLineChartBarData([
+              const FlSpot(1, 100.50),
+              const FlSpot(2, 200.80),
+              const FlSpot(3, 200.0),
+              const FlSpot(4, 400.50),
+              const FlSpot(5, 300.50),
+              const FlSpot(6, 200.80),
+              const FlSpot(7, 300.80),
+            ], const Color(0xFFF24822)),
           ],
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
@@ -47,7 +40,10 @@ class GraficoEstadisticas extends StatelessWidget {
                 return touchedBarSpots.map((barSpot) {
                   return LineTooltipItem(
                     'S/${barSpot.y.toInt()}',
-                    const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                    const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   );
                 }).toList();
               },
@@ -55,7 +51,11 @@ class GraficoEstadisticas extends StatelessWidget {
             getTouchedSpotIndicator: (barData, spotIndexes) {
               return spotIndexes.map((spotIndex) {
                 return TouchedSpotIndicatorData(
-                  const FlLine(color: Colors.white, strokeWidth: 2, dashArray: [5, 5]),
+                  const FlLine(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                    dashArray: [5, 5],
+                  ),
                   FlDotData(
                     getDotPainter: (spot, percent, barData, index) {
                       return FlDotCirclePainter(
