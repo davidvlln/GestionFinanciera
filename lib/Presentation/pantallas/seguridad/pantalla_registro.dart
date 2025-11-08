@@ -92,12 +92,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: EdgeInsetsGeometry.directional(start: 15),
-                    child: Text('Apellidos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.Verde70)),
-                  ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
@@ -110,7 +105,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
                           controller: _apellidoMaternoController,
