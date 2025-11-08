@@ -1,3 +1,4 @@
+import 'package:Caney/Presentation/pantallas/app/pantalla_gastos.dart';
 import 'package:flutter/material.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
 
@@ -22,7 +23,7 @@ class PantallaInicioApp extends StatelessWidget {
               const SizedBox(height: 0),
               const TarjetaCredito(),
               const SizedBox(height: 30),
-              CabeceraSeccion(titulo: 'Dinero Estructurado', colorTexto: AppColors.Negro100, verMas: false,),
+              CabeceraSeccion(titulo: 'Dinero Estructurado', colorTexto: AppColors.Negro100, verMas: false),
               const SizedBox(height: 15),
               const Row(
                 children: [
@@ -32,7 +33,7 @@ class PantallaInicioApp extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 30),
-              CabeceraSeccion(titulo: 'Gastos Frecuentes', colorTexto: AppColors.Verde70, verMas: true,),
+              CabeceraSeccion(titulo: 'Gastos Recientes', colorTexto: AppColors.Verde70, verMas: true, direccion: PantallaGastos()),
               const SizedBox(height: 15),
               ListView.separated(
                 shrinkWrap: true,

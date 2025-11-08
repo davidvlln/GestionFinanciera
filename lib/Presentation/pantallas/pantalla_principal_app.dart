@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:Caney/Presentation/pantallas/app/pantalla_metas.dart';
 import 'package:flutter/material.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
 
@@ -25,20 +26,21 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
   static const List<Widget> _pantallas = <Widget>[
     PantallaInicioApp(),
     PantallaEstadisticas(),
+    PantallaMetas(),
     PantallaPerfil(),
   ];
 
   static final List<Color> _coloresDeFondo = <Color>[
     AppColors.Transparent,
     Color(0xFF22C5A1),
-    const Color(0xFF4A148C),
+    AppColors.Transparent,
     Colors.orange,
   ];
 
   static final List<Color> _coloresDeTexto = <Color>[
     AppColors.Verde70,
     Colors.white,
-    Colors.white,
+    AppColors.Verde70,
     Colors.white,
   ];
 
@@ -59,7 +61,7 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
 
   @override
   Widget build(BuildContext context) {
-    final titulos = ['', 'Estadísticas', 'Perfil', 'Ajustes'];
+    final titulos = ['', 'Estadísticas', 'Metas', 'Ajustes'];
 
     return Scaffold(
       appBar: BarraSuperiorPersonalizada(
@@ -107,8 +109,8 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
               _buildNavItem(icon: Icons.home, index: 0),
               _buildNavItem(icon: Icons.bar_chart, index: 1),
               const SizedBox(width: 20),
-              _buildNavItem(icon: Icons.person, index: 2),
-              _buildNavItem(icon: Icons.settings, index: 3),
+              _buildNavItem(icon: Icons.credit_card_rounded, index: 2),
+              _buildNavItem(icon: Icons.person, index: 3),
             ],
           ),
         ),
