@@ -95,7 +95,7 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PantallaAgregarRegistro()),
+              MaterialPageRoute(builder: (context) => PantallaAgregarRegistro(user: widget.user)),
             );
           },
         ),
