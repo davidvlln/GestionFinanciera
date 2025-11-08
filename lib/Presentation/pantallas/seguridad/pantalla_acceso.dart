@@ -155,33 +155,59 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               final usuarioRepo = UsuarioImp();
-                              final nameOrEmail = _emailController.text.trim();
-                              final password = _passwordController.text.trim();
+                              final nameOrEmail = _emailController.text
+                                  .trim();
+                              final password = _passwordController.text
+                                  .trim();
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Verificando credenciales...')),
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.green,
+                                  ),
+                                ),
                               );
 
-                              final response = await usuarioRepo.getValidarUsuario(nameOrEmail, password);
+                              final response = await usuarioRepo
+                                  .getValidarUsuario(nameOrEmail, password);
+
+                              if (context.mounted) Navigator.pop(context);
 
                               if (response.data != null) {
-                                final usuario = response.data!;
+                                final usuario = response.data;
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Bienvenido ${usuario.name ?? usuario.correo}!')),
+                                  SnackBar(
+                                    content: Text(
+                                      'Bienvenido ${usuario.name ?? usuario.correo}!',
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
                                 );
 
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const PantallaPrincipalApp()),
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                    const PantallaPrincipalApp(),
+                                  ),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(response.message ?? 'Credenciales inválidas')),
+                                  SnackBar(
+                                    content: Text(
+                                      response.message ??
+                                          'Credenciales inválidas',
+                                    ),
+                                    backgroundColor: Colors.redAccent,
+                                  ),
                                 );
                               }
                             }
                           },
                         ),
+
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +216,10 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) => const PantallaRegistro()),
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                    const PantallaRegistro(),
+                                  ),
                                 );
                               },
                               child: const Text(
