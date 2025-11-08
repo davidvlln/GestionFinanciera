@@ -47,7 +47,7 @@ class PantallaMetas extends StatelessWidget {
           ),
           DraggableScrollableSheet(
             initialChildSize: 0.6,
-            minChildSize: 0.6,
+            minChildSize: 0.15,
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(

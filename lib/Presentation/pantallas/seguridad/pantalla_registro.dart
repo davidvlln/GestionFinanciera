@@ -13,6 +13,10 @@ class PantallaRegistro extends StatefulWidget {
 class _PantallaRegistroState extends State<PantallaRegistro> {
   final _formKey = GlobalKey<FormState>();
 
+  final _usuarioController = TextEditingController();
+  final _nombresController = TextEditingController();
+  final _apellidoPaternoController = TextEditingController();
+  final _apellidoMaternoController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -20,6 +24,10 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
 
   @override
   void dispose() {
+    _usuarioController.dispose();
+    _nombresController.dispose();
+    _apellidoPaternoController.dispose();
+    _apellidoMaternoController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -40,7 +48,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       IconButton(
@@ -56,9 +64,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 0),
                   Text(
-                    'Registrate!',
+                    'Regístrate!',
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
@@ -66,17 +74,63 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                     ),
                   ),
                   const SizedBox(height: 30),
+
+                  TextFormField(
+                    controller: _usuarioController,
+                    decoration: _buildInputDecoration(hintText: 'Usuario', icon: Icons.person_outline),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Ingresa un nombre de usuario';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _nombresController,
+                    decoration: _buildInputDecoration(hintText: 'Nombres', icon: Icons.person_outline),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Ingresa tus nombres';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsetsGeometry.directional(start: 15),
+                    child: Text('Apellidos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.Verde70)),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _apellidoPaternoController,
+                          decoration: _buildInputDecoration(hintText: 'Paterno', icon: Icons.person_outline),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'Ingresa tu apellido';
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _apellidoMaternoController,
+                          decoration: _buildInputDecoration(hintText: 'Materno', icon: Icons.person_outline),
+                           validator: (value) {
+                            if (value == null || value.isEmpty) return 'Ingresa tu apellido';
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: _buildInputDecoration(hintText: 'Usuario o Correo', icon: Icons.email_outlined),
+                    decoration: _buildInputDecoration(hintText: 'Correo', icon: Icons.email_outlined),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa tu correo';
-                      }
-                      if (!value.contains('@')) {
-                        return 'Por favor, ingresa un correo válido';
-                      }
+                      if (value == null || value.isEmpty) return 'Ingresa tu correo';
+                      if (!value.contains('@')) return 'Ingresa un correo válido';
                       return null;
                     },
                   ),
@@ -86,12 +140,8 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                     obscureText: true,
                     decoration: _buildInputDecoration(hintText: 'Contraseña', icon: Icons.lock_outline),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa una contraseña';
-                      }
-                      if (value.length < 6) {
-                        return 'La contraseña debe tener al menos 6 caracteres';
-                      }
+                      if (value == null || value.isEmpty) return 'Ingresa una contraseña';
+                      if (value.length < 6) return 'La contraseña debe tener al menos 6 caracteres';
                       return null;
                     },
                   ),
@@ -101,12 +151,8 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                     obscureText: true,
                     decoration: _buildInputDecoration(hintText: 'Confirmar Contraseña', icon: Icons.lock_outline),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, confirma tu contraseña';
-                      }
-                      if (value != _passwordController.text) {
-                        return 'Las contraseñas no coinciden';
-                      }
+                      if (value == null || value.isEmpty) return 'Confirma tu contraseña';
+                      if (value != _passwordController.text) return 'Las contraseñas no coinciden';
                       return null;
                     },
                   ),
@@ -116,9 +162,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                     keyboardType: TextInputType.phone,
                     decoration: _buildInputDecoration(hintText: 'Teléfono', icon: Icons.phone_outlined),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa tu teléfono';
-                      }
+                      if (value == null || value.isEmpty) return 'Ingresa tu teléfono';
                       return null;
                     },
                   ),
@@ -130,7 +174,6 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Procesando registro...')),
                         );
-                        // Lógica de registro con Supabase
                       }
                     },
                   ),

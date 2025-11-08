@@ -40,7 +40,7 @@ class PantallaEstadisticas extends StatelessWidget {
           ),
           DraggableScrollableSheet(
             initialChildSize: 0.3,
-            minChildSize: 0.3,
+            minChildSize: 0.15,
             maxChildSize: 0.9,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
