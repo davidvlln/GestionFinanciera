@@ -23,7 +23,7 @@ class CuentaImp implements ICuentaServ {
   }
 
   @override
-  Future<CuentaResponse> getCuentaByUsuario(int idUsuario) async {
+  Future<CuentaResponse> getCuentaByUsuario(int? idUsuario) async {
     try {
       final response = await dataSource
           .from('Cuenta')
