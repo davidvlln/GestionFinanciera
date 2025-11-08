@@ -146,16 +146,20 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                                   final password = _passwordController.text
                                       .trim();
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Verificando credenciales...',
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) => const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.green,
                                       ),
                                     ),
                                   );
 
                                   final response = await usuarioRepo
                                       .getValidarUsuario(nameOrEmail, password);
+
+                                  if (context.mounted) Navigator.pop(context);
 
                                   if (response.data != null) {
                                     final usuario = response.data;
@@ -164,6 +168,7 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                                         content: Text(
                                           'Bienvenido ${usuario.name ?? usuario.correo}!',
                                         ),
+                                        backgroundColor: Colors.green,
                                       ),
                                     );
 
@@ -181,12 +186,14 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                                           response.message ??
                                               'Credenciales inválidas',
                                         ),
+                                        backgroundColor: Colors.redAccent,
                                       ),
                                     );
                                   }
                                 }
                               },
                             ),
+
                             const SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
