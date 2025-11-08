@@ -5,6 +5,7 @@ class Cuenta {
   final String? nombreCuenta;
   final double? saldo;
   final String? estado;
+  final String? titulo;
 
   Cuenta({
     this.idCuenta,
@@ -13,6 +14,7 @@ class Cuenta {
     this.nombreCuenta,
     this.saldo,
     this.estado,
+    this.titulo
   });
 
   factory Cuenta.fromJson(Map<String, dynamic> json) => Cuenta(
@@ -22,6 +24,7 @@ class Cuenta {
     nombreCuenta: json['nombreCuenta'] as String?,
     saldo: (json['Saldo'] as num?)?.toDouble(),
     estado: json['estado'] as String?,
+    titulo:json['titulo'] as String
   );
 
   Map<String, dynamic> toJson() => {
@@ -31,6 +34,7 @@ class Cuenta {
     if (nombreCuenta != null) 'nombreCuenta': nombreCuenta,
     if (saldo != null) 'Saldo': saldo,
     if (estado != null) 'estado': estado,
+    if (titulo != null) 'titulo': titulo
   };
 }
 

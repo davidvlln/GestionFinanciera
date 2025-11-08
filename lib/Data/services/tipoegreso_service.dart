@@ -5,4 +5,5 @@ abstract class ITipoEgresoServ {
   Future<TipoEgresoResponse> createTipoEgreso(TipoEgreso tipoEgreso);
   Future<TipoEgresoResponse> updateTipoEgreso(int id, TipoEgreso tipoEgreso);
   Future<TipoEgresoResponse> deleteTipoEgreso(int id);
+  Future<TipoEgresoResponse> getTipoEgresoPorID(int? id); 
 }

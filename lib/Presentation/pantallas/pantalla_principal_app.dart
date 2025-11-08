@@ -18,19 +18,25 @@ class PantallaPrincipalApp extends StatefulWidget {
   final Usuario? user;
   const PantallaPrincipalApp({super.key,this.user});
 
+    
   @override
   State<PantallaPrincipalApp> createState() => _PantallaPrincipalAppState();
 }
 
 class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
-  int _selectedIndex = 0;
+   int _selectedIndex = 0;
+  late List<Widget> _pantallas;
 
-  static const List<Widget> _pantallas = <Widget>[
-    PantallaInicioApp(),
-    PantallaEstadisticas(),
-    PantallaMetas(),
-    PantallaPerfil(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _pantallas = [
+      PantallaInicioApp(user:widget.user,),
+      PantallaEstadisticas(),
+      PantallaMetas(),
+      PantallaPerfil(),
+    ];
+  }
 
   static final List<Color> _coloresDeFondo = <Color>[
     AppColors.Transparent,

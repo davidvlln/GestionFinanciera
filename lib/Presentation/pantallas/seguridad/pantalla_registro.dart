@@ -87,8 +87,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       icon: Icons.person_outline,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Ingresa un nombre de usuario';
+                      }
                       return null;
                     },
                   ),
@@ -100,8 +101,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       icon: Icons.person_outline,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Ingresa tus nombres';
+                      }
                       return null;
                     },
                   ),
@@ -116,8 +118,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                             icon: Icons.person_outline,
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty)
+                            if (value == null || value.isEmpty) {
                               return 'Ingresa tu apellido';
+                            }
                             return null;
                           },
                         ),
@@ -131,8 +134,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                             icon: Icons.person_outline,
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty)
+                            if (value == null || value.isEmpty) {
                               return 'Ingresa tu apellido';
+                            }
                             return null;
                           },
                         ),
@@ -148,10 +152,12 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       icon: Icons.email_outlined,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Ingresa tu correo';
-                      if (!value.contains('@'))
+                      }
+                      if (!value.contains('@')) {
                         return 'Ingresa un correo válido';
+                      }
                       return null;
                     },
                   ),
@@ -164,10 +170,12 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       icon: Icons.lock_outline,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Ingresa una contraseña';
-                      if (value.length < 6)
+                      }
+                      if (value.length < 6) {
                         return 'La contraseña debe tener al menos 6 caracteres';
+                      }
                       return null;
                     },
                   ),
@@ -180,10 +188,12 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       icon: Icons.lock_outline,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Confirma tu contraseña';
-                      if (value != _passwordController.text)
+                      }
+                      if (value != _passwordController.text) {
                         return 'Las contraseñas no coinciden';
+                      }
                       return null;
                     },
                   ),
@@ -196,8 +206,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                       icon: Icons.phone_outlined,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Ingresa tu teléfono';
+                      }
                       return null;
                     },
                   ),

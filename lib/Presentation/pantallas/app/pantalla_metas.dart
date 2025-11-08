@@ -85,7 +85,7 @@ class _PantallaMetasState extends State<PantallaMetas> {
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2))]),
-                      child: Row(children: [CircleAvatar(child: Icon(meta['icono']), backgroundColor: AppColors.Verde70.withOpacity(0.1), foregroundColor: AppColors.Verde70), const SizedBox(width: 15), Expanded(child: Text(meta['titulo'], style: const TextStyle(fontWeight: FontWeight.bold))), Text(meta['monto'], style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))]),
+                      child: Row(children: [CircleAvatar(backgroundColor: AppColors.Verde70.withOpacity(0.1), foregroundColor: AppColors.Verde70, child: Icon(meta['icono'])), const SizedBox(width: 15), Expanded(child: Text(meta['titulo'], style: const TextStyle(fontWeight: FontWeight.bold))), Text(meta['monto'], style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))]),
                     );
                   },
                 ),
@@ -132,7 +132,7 @@ class _PantallaMetasState extends State<PantallaMetas> {
                           estado: actividad['estado'],
                           onTap: () => _ciclarEstadoActividad(index),
                         );
-                    }).toList(),
+                    }),
                   ],
                 ),
               );

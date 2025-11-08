@@ -83,4 +83,25 @@ class TipoEgresoImp implements ITipoEgresoServ {
       );
     }
   }
+
+
+  @override
+  Future<TipoEgresoResponse> getTipoEgresoPorID(int? id) async {
+    try{
+    final response = await dataSource
+        .from('TipoEgreso')
+        .select()
+        .eq('id',id);
+      
+    
+    final lista = (response as List)
+          .map((e) => TipoEgreso.fromJson(e))
+          .toList();
+      return TipoEgresoResponse(data: lista, message: 'Consulta exitosa');
+
+    }catch(error){
+      return TipoEgresoResponse(data: null,message: 'Error al obtener tipo de egreso:${error.toString()}'); 
+    }
+  }
+  
 }

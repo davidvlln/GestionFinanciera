@@ -1,9 +1,12 @@
+import 'package:Caney/Data/models/cuenta_model.dart';
+import 'package:Caney/Data/models/usuario_model.dart';
+import 'package:Caney/Data/repositories/cuenta_implementacion.dart';
 import 'package:flutter/material.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
 
-// 1. Convertido a StatefulWidget
 class TarjetaCredito extends StatefulWidget {
-  const TarjetaCredito({super.key});
+  final Usuario? user; 
+  const TarjetaCredito({super.key, this.user});
 
   @override
   State<TarjetaCredito> createState() => _TarjetaCreditoState();
@@ -11,38 +14,39 @@ class TarjetaCredito extends StatefulWidget {
 
 class _TarjetaCreditoState extends State<TarjetaCredito> {
   final _controladorPagina = PageController(viewportFraction: 0.9);
-  int _paginaActual = 0;
+  final _cuentaRepo = CuentaImp();
 
-  final List<Map<String, dynamic>> _datosTarjetas = [
-    {
-      'monto': 'S/10,000',
-      'titulo': 'Total Ahorrado',
-      'nombre': 'BCP',
-      'tipo': 'VISA',
-      'fecha': '07/11/2025',
-      'colorFondo': AppColors.Verde70,
-      'colorRecorte': const Color(0xFFF95B51),
-    },
-    {
-      'monto': 'S/5,250',
-      'titulo': 'Ahorro Interbank',
-      'nombre': 'Carlos Miller',
-      'tipo': 'MASTERCARD',
-      'fecha': '12/10/2027',
-      'colorFondo': Colors.indigo.shade700,
-      'colorRecorte': Colors.amber.shade700,
-    },
-  ];
+  int _paginaActual = 0;
+  bool _isLoading = true;
+  List<Cuenta> _cuentas = [];
 
   @override
   void initState() {
     super.initState();
+
+    _cargarCuentas();
+
     _controladorPagina.addListener(() {
       if (_controladorPagina.page != null) {
         setState(() {
           _paginaActual = _controladorPagina.page!.round();
         });
       }
+    });
+  }
+
+  Future<void> _cargarCuentas() async {
+    if (widget.user == null) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+   
+    final response = await _cuentaRepo.getCuentaByUsuario(widget.user!.idUser);
+    setState(() {
+      _cuentas = response.data ?? [];
+      _isLoading = false;
     });
   }
 
@@ -54,6 +58,14 @@ class _TarjetaCreditoState extends State<TarjetaCredito> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_cuentas.isEmpty) {
+      return const Center(child: Text('No hay cuentas registradas'));
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -61,11 +73,18 @@ class _TarjetaCreditoState extends State<TarjetaCredito> {
           width: 400,
           child: PageView.builder(
             controller: _controladorPagina,
-            itemCount: _datosTarjetas.length,
+            itemCount: _cuentas.length,
             itemBuilder: (context, index) {
+              final cuenta = _cuentas[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: _TarjetaIndividual(datos: _datosTarjetas[index]),
+                child: _TarjetaIndividual(
+                  titulo: cuenta.nombreCuenta ?? 'Sin nombre',
+                  monto: 'S/${cuenta.saldo?.toStringAsFixed(2) ?? "0.00"}',
+                  tipo: 'Cuenta general',
+                  colorFondo: AppColors.Verde70,
+                  colorRecorte: const Color(0xFFF95B51),
+                ),
               );
             },
           ),
@@ -79,7 +98,7 @@ class _TarjetaCreditoState extends State<TarjetaCredito> {
   Widget _buildIndicadorPagina() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(_datosTarjetas.length, (index) {
+      children: List.generate(_cuentas.length, (index) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           width: _paginaActual == index ? 24.0 : 8.0,
@@ -98,9 +117,19 @@ class _TarjetaCreditoState extends State<TarjetaCredito> {
 }
 
 class _TarjetaIndividual extends StatelessWidget {
-  final Map<String, dynamic> datos;
+  final String titulo;
+  final String monto;
+  final String tipo;
+  final Color colorFondo;
+  final Color colorRecorte;
 
-  const _TarjetaIndividual({required this.datos});
+  const _TarjetaIndividual({
+    required this.titulo,
+    required this.monto,
+    required this.tipo,
+    required this.colorFondo,
+    required this.colorRecorte,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +137,7 @@ class _TarjetaIndividual extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: datos['colorFondo'] as Color?,
+            color: colorFondo,
             borderRadius: BorderRadius.circular(25),
           ),
         ),
@@ -117,17 +146,24 @@ class _TarjetaIndividual extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
-              color: datos['colorRecorte'] as Color?,
+              color: colorRecorte,
               borderRadius: BorderRadius.circular(25),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  datos['monto'],
-                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+                  monto,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-                Text(datos['titulo'], style: const TextStyle(color: Colors.white70)),
+                Text(
+                  titulo,
+                  style: const TextStyle(color: Colors.white70),
+                ),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -135,37 +171,20 @@ class _TarjetaIndividual extends StatelessWidget {
                     color: Colors.black.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Text(datos['nombre'], style: const TextStyle(color: Colors.white, fontSize: 12)),
+                  child: Text(
+                    tipo,
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
                 ),
               ],
             ),
           ),
-        ),
-        Positioned(
-          bottom: 20,
-          right: 25,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                datos['tipo'],
-                style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 24, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-              ),
-              const SizedBox(height: 0),
-            ],
-          ),
-        ),
-        Positioned(
-          top: 20,
-          right: 25,
-          child: Text(datos['fecha'], style: TextStyle(color: Colors.white.withOpacity(0.7))),
         ),
       ],
     );
   }
 }
 
-// El CustomClipper se mantiene igual
 class _RecortadorTarjeta extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
