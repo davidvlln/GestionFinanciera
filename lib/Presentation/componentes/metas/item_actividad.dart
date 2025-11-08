@@ -1,31 +1,46 @@
 import 'package:flutter/material.dart';
 
+enum EstadoActividad { pendiente, completada, noCompletada }
+
 class ItemActividad extends StatelessWidget {
   final String titulo;
   final String subtitulo;
   final String hora;
-  final bool estaCompletado;
-  final VoidCallback? onTap; // 1. Añadimos el callback para el tap
+  final EstadoActividad estado;
+  final VoidCallback? onTap;
 
   const ItemActividad({
     super.key,
     required this.titulo,
     required this.subtitulo,
     required this.hora,
-    this.estaCompletado = false,
+    this.estado = EstadoActividad.pendiente,
     this.onTap,
   });
 
+  Color _getColor() {
+    switch (estado) {
+      case EstadoActividad.completada:
+        return const Color(0xFF00A98B);
+      case EstadoActividad.noCompletada:
+        return Colors.red;
+      case EstadoActividad.pendiente:
+      default:
+        return Colors.grey.shade400;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 2. Envolvemos todo en un InkWell para el efecto de pulsación
+    final color = _getColor();
+    final bool estaActivo = estado != EstadoActividad.pendiente;
+
     return InkWell(
-      onTap: onTap, // 3. Asignamos la función al evento onTap
+      onTap: onTap,
       borderRadius: BorderRadius.circular(15),
       child: IntrinsicHeight(
         child: Row(
           children: [
-            // La línea de tiempo vertical
             SizedBox(
               width: 30,
               child: Column(
@@ -34,9 +49,9 @@ class ItemActividad extends StatelessWidget {
                     width: 15,
                     height: 15,
                     decoration: BoxDecoration(
-                      color: estaCompletado ? const Color(0xFF00A98B) : Colors.transparent,
+                      color: estaActivo ? color : Colors.transparent,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey.shade400, width: 2),
+                      border: Border.all(color: color, width: 2),
                     ),
                   ),
                   Expanded(
@@ -48,7 +63,6 @@ class ItemActividad extends StatelessWidget {
                 ],
               ),
             ),
-            // La información de la actividad
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -60,7 +74,7 @@ class ItemActividad extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: estaCompletado ? const Color(0xFF00A98B) : Colors.black87,
+                        color: estaActivo ? color : Colors.black87,
                       ),
                     ),
                     Text(
