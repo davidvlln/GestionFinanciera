@@ -24,7 +24,7 @@ class PantallaGastos extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 0),
                 const GraficoGastosCirculares(),
                 const SizedBox(height: 20),
                 _buildIndicadores(),
@@ -32,9 +32,9 @@ class PantallaGastos extends StatelessWidget {
             ),
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.4,
-            minChildSize: 0.4,
-            maxChildSize: 0.8,
+            initialChildSize: 0.47,
+            minChildSize: 0.47,
+            maxChildSize: 0.63,
             builder: (context, scrollController) {
               return Container(
                 padding: const EdgeInsets.all(25),
@@ -70,8 +70,7 @@ class PantallaGastos extends StatelessWidget {
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Recent Transactions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text('See all', style: TextStyle(color: Colors.grey)),
+                        Text('Registro de Gastos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const SizedBox(height: 15),
