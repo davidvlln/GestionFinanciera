@@ -1,7 +1,6 @@
-
-
 class Usuario {
   final int? idUser;
+  final String? idAuth;
   final String? name;
   final String? password;
   final String? nombres;
@@ -9,9 +8,10 @@ class Usuario {
   final String? apeMaterno;
   final String? correo;
   final String? telefono;
-  
+
   Usuario({
     this.idUser,
+    this.idAuth,
     this.name,
     this.password,
     this.nombres,
@@ -21,44 +21,40 @@ class Usuario {
     this.telefono,
   });
 
- 
-
   factory Usuario.fromJson(Map<String, dynamic> response) => Usuario(
-    idUser: response['idUser'] as int,
-    name: response['name'] as String,
-    password: response['password'] as String,
-    nombres: response['nombres'] as String,
-    apePaterno: response['ape_paterno'] as String,
-    apeMaterno: response['ape_materno'] as String,
-    correo: response['correo'] as String,
-    telefono: response['telefono'] as String,
+    idUser: response['idUser'] as int?,
+    idAuth: response['idAuth'] as String?,
+    name: response['name'] as String?,
+    password: response['password'] as String?,
+    nombres: response['nombres'] as String?,
+    apePaterno: response['ape_paterno'] as String?,
+    apeMaterno: response['ape_materno'] as String?,
+    correo: response['correo'] as String?,
+    telefono: response['telefono'] as String?,
   );
-
- 
 
   Map<String, dynamic> toJson() => {
     if (idUser != null) 'idUser': idUser,
+    if (idAuth != null) 'idAuth': idAuth,
     if (name != null) 'name': name,
-    if (password !=null) 'password':password,
-    if (nombres !=null) 'nombres': nombres,
-    if (apePaterno !=null) 'ape_paterno':apePaterno,
-    if (apeMaterno !=null) 'ape_materno':apeMaterno,
-    if (correo !=null) 'correo' :correo,
-    if (telefono !=null) 'telefono':telefono
+    if (password != null) 'password': password,
+    if (nombres != null) 'nombres': nombres,
+    if (apePaterno != null) 'ape_paterno': apePaterno,
+    if (apeMaterno != null) 'ape_materno': apeMaterno,
+    if (correo != null) 'correo': correo,
+    if (telefono != null) 'telefono': telefono,
   };
 }
 
-
-
-class UsuarioResponse{
+class UsuarioResponse {
   final dynamic data;
   final String? message;
 
-  UsuarioResponse({this.data,this.message});
+  UsuarioResponse({this.data, this.message});
 
-  factory UsuarioResponse.fromJson(Map<String,dynamic> response)=>UsuarioResponse(
-    data: response['data'] as String,
-    message: response['message'] as String
-  );
+  factory UsuarioResponse.fromJson(Map<String, dynamic> response) =>
+      UsuarioResponse(
+        data: response['data'],
+        message: response['message'] as String?,
+      );
 }
-
