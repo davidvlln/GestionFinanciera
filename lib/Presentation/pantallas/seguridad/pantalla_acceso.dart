@@ -1,3 +1,4 @@
+import 'package:Caney/Data/models/usuario_model.dart';
 import 'package:flutter/material.dart';
 import '../../componentes/acceso/boton_principal.dart';
 import '../pantalla_principal_app.dart';
@@ -15,7 +16,7 @@ class PantallaAcceso extends StatefulWidget {
 
 class _PantallaAccesoState extends State<PantallaAcceso> {
   final _formKey = GlobalKey<FormState>();
-
+  Usuario usuario = Usuario();  
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -160,53 +161,55 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                               final password = _passwordController.text
                                   .trim();
 
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              );
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) =>  Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.Verde70,
+                                      ),
+                                    ),
+                                  );
 
                               final response = await usuarioRepo
                                   .getValidarUsuario(nameOrEmail, password);
 
                               if (context.mounted) Navigator.pop(context);
 
-                              if (response.data != null) {
-                                final usuario = response.data;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Bienvenido ${usuario.name ?? usuario.correo}!',
-                                    ),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
+                                  if (response.data != null) {
+                                   
 
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                    const PantallaPrincipalApp(),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      response.message ??
-                                          'Credenciales inválidas',
-                                    ),
-                                    backgroundColor: Colors.redAccent,
-                                  ),
-                                );
-                              }
-                            }
-                          },
-                        ),
+                                    usuario = response.data;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Bienvenido ${usuario.nombres ?? usuario.correo}!',
+                                        ),
+                                        backgroundColor: AppColors.Verde70,
+                                      ),
+                                    );
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                             PantallaPrincipalApp(user:usuario),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          response.message ??
+                                              'Credenciales inválidas',
+                                        ),
+                                        backgroundColor: AppColors.Rojo70,
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
 
                         const SizedBox(height: 20),
                         Row(

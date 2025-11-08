@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:Caney/Data/models/usuario_model.dart';
 import 'package:Caney/Presentation/pantallas/app/pantalla_metas.dart';
 import 'package:flutter/material.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
@@ -14,7 +15,8 @@ import './app/pantalla_perfil.dart';
 import './app/pantalla_agregar_registro.dart';
 
 class PantallaPrincipalApp extends StatefulWidget {
-  const PantallaPrincipalApp({super.key});
+  final Usuario? user;
+  const PantallaPrincipalApp({super.key,this.user});
 
   @override
   State<PantallaPrincipalApp> createState() => _PantallaPrincipalAppState();
@@ -66,7 +68,7 @@ class _PantallaPrincipalAppState extends State<PantallaPrincipalApp> {
     return Scaffold(
       appBar: BarraSuperiorPersonalizada(
         title: _selectedIndex == 0 ? null : titulos[_selectedIndex],
-        nombreCliente: _selectedIndex == 0 ? 'Carlos' : null,
+        nombreCliente: _selectedIndex == 0 ? widget.user?.nombres.toString() : null,
         height: _height[_selectedIndex],
         alineacion: _selectedIndex == 0 ? AlineacionBarra.centro : AlineacionBarra.centro,
         backgroundColor: _coloresDeFondo[_selectedIndex],
