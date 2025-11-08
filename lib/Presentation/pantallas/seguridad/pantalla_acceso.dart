@@ -4,6 +4,7 @@ import '../pantalla_principal_app.dart'; // Asegurarse de que este import esté 
 import 'pantalla_registro.dart';
 import 'package:Caney/generated/assets.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
+import '../../../Data/repositories/usuario_implementacion.dart';
 
 class PantallaAcceso extends StatefulWidget {
   const PantallaAcceso({super.key});
@@ -31,9 +32,7 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Container(
-            color: AppColors.Verde70,
-          ),
+          Container(color: AppColors.Verde70),
           SafeArea(
             bottom: false,
             child: Column(
@@ -45,11 +44,7 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 60),
-                      Image.asset(
-                        Assets.imgMoneda,
-                        width: 125,
-                        height: 125,
-                      ),
+                      Image.asset(Assets.imgMoneda, width: 125, height: 125),
                       const SizedBox(height: 20),
                       const Text(
                         'Hola!',
@@ -61,10 +56,7 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                       ),
                       const Text(
                         'Bienvenido a Caney',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(fontSize: 20, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -98,12 +90,18 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                             TextFormField(
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
-                              decoration: _buildInputDecoration(hintText: 'Usuario o Correo', icon: Icons.email_outlined),
+                              decoration: _buildInputDecoration(
+                                hintText: 'Usuario o Correo',
+                                icon: Icons.email_outlined,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Por favor, ingresa tu correo';
+                                  return 'Por favor, ingresa tu usuario o correo';
                                 }
-                                if (!value.contains('@')) {
+                                if (value.contains('@') &&
+                                    !RegExp(
+                                      r'^[^@]+@[^@]+\.[^@]+',
+                                    ).hasMatch(value)) {
                                   return 'Por favor, ingresa un correo válido';
                                 }
                                 return null;
@@ -113,7 +111,10 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                             TextFormField(
                               controller: _passwordController,
                               obscureText: true,
-                              decoration: _buildInputDecoration(hintText: 'Contraseña', icon: Icons.lock_outline),
+                              decoration: _buildInputDecoration(
+                                hintText: 'Contraseña',
+                                icon: Icons.lock_outline,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Por favor, ingresa tu contraseña';
@@ -128,24 +129,62 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                 onPressed: () {},
-                                child: Text('Olvidaste tu contraseña?', style: TextStyle(color: AppColors.Rojo70)),
+                                child: Text(
+                                  'Olvidaste tu contraseña?',
+                                  style: TextStyle(color: AppColors.Rojo70),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
                             BotonPrincipal(
                               texto: 'Acceder',
-                              onPressed: () {
-                                // --- Descomenta esto ---
-                                // Se comenta la validación y se añade la navegación directa
-                                // if (_formKey.currentState!.validate()) {
-                                //   ScaffoldMessenger.of(context).showSnackBar(
-                                //     const SnackBar(content: Text('Procesando datos...')),
-                                //   );
-                                // }
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const PantallaPrincipalApp()),
-                                );
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  final usuarioRepo = UsuarioImp();
+                                  final nameOrEmail = _emailController.text
+                                      .trim();
+                                  final password = _passwordController.text
+                                      .trim();
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Verificando credenciales...',
+                                      ),
+                                    ),
+                                  );
+
+                                  final response = await usuarioRepo
+                                      .getValidarUsuario(nameOrEmail, password);
+
+                                  if (response.data != null) {
+                                    final usuario = response.data;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Bienvenido ${usuario.name ?? usuario.correo}!',
+                                        ),
+                                      ),
+                                    );
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PantallaPrincipalApp(),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          response.message ??
+                                              'Credenciales inválidas',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
                               },
                             ),
                             const SizedBox(height: 20),
@@ -156,10 +195,19 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => const PantallaRegistro()),
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PantallaRegistro(),
+                                      ),
                                     );
                                   },
-                                  child: const Text('Registrate ahora', style: TextStyle(color: Color(0xFF169C88), fontWeight: FontWeight.bold)),
+                                  child: const Text(
+                                    'Registrate ahora',
+                                    style: TextStyle(
+                                      color: Color(0xFF169C88),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -177,13 +225,19 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
     );
   }
 
-  InputDecoration _buildInputDecoration({required String hintText, required IconData icon}) {
+  InputDecoration _buildInputDecoration({
+    required String hintText,
+    required IconData icon,
+  }) {
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(icon, color: Colors.grey),
       filled: true,
       fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 16.0,
+        horizontal: 20.0,
+      ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
         borderSide: BorderSide.none,
@@ -194,10 +248,7 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
-        borderSide: BorderSide(
-          color: const Color(0xFF169C88),
-          width: 2.0,
-        ),
+        borderSide: BorderSide(color: const Color(0xFF169C88), width: 2.0),
       ),
     );
   }

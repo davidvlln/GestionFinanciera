@@ -6,7 +6,8 @@ import '../../Core/errors/error_common.dart';
 class UsuarioImp implements IUsuarioServ {
   final dynamic dataSource;
 
-  UsuarioImp({dynamic dataSourceClient}) : dataSource = dataSourceClient ?? Supabase.instance.client;
+  UsuarioImp({dynamic dataSourceClient})
+    : dataSource = dataSourceClient ?? Supabase.instance.client;
 
   @override
   Future<UsuarioResponse> getUsuario() async {
@@ -28,14 +29,14 @@ class UsuarioImp implements IUsuarioServ {
 
   @override
   Future<UsuarioResponse> getValidarUsuario(
-    String name,
+    String nameOrEmail,
     String password,
   ) async {
     try {
       final response = await dataSource
           .from('Usuario')
           .select()
-          .eq('name', name)
+          .or('name.eq.$nameOrEmail,correo.eq.$nameOrEmail')
           .eq('password', password)
           .maybeSingle();
 
@@ -49,7 +50,7 @@ class UsuarioImp implements IUsuarioServ {
       );
     } catch (error) {
       return UsuarioResponse(
-        message: '${ErrorCommon.errorResponse}${error.toString()}',
+        message: 'Error en la autenticación: ${error.toString()}',
         data: null,
       );
     }
