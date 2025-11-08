@@ -39,8 +39,8 @@ class PantallaEstadisticas extends StatelessWidget {
             ],
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.3,
-            minChildSize: 0.15,
+            initialChildSize: 0.18,
+            minChildSize: 0.18,
             maxChildSize: 0.9,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
@@ -71,7 +71,6 @@ class PantallaEstadisticas extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Historial de transacciones', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text('Ver Mas >', style: TextStyle(color: Colors.grey.shade700)),
                       ],
                     ),
                     const SizedBox(height: 15),

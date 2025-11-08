@@ -28,6 +28,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders += mapOf(
+            "GOOGLE_SIGN_IN_CLIENT_ID" to "725764042049-4eis5c81g3m2icmt95avdosm2hduu79o.apps.googleusercontent.com"
+        )
     }
 
     buildTypes {

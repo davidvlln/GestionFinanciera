@@ -1,68 +1,186 @@
+import 'package:Caney/Data/models/cuenta_model.dart';
+import 'package:Caney/Data/models/usuario_model.dart';
+import 'package:Caney/Data/repositories/cuenta_implementacion.dart';
 import 'package:flutter/material.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
 
-class TarjetaCredito extends StatelessWidget {
-  const TarjetaCredito({super.key});
+class TarjetaCredito extends StatefulWidget {
+  final Usuario? user; 
+  const TarjetaCredito({super.key, this.user});
+
+  @override
+  State<TarjetaCredito> createState() => _TarjetaCreditoState();
+}
+
+class _TarjetaCreditoState extends State<TarjetaCredito> {
+  final _controladorPagina = PageController(viewportFraction: 0.9);
+  final _cuentaRepo = CuentaImp();
+
+  int _paginaActual = 0;
+  bool _isLoading = true;
+  List<Cuenta> _cuentas = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cargarCuentas();
+
+    _controladorPagina.addListener(() {
+      if (_controladorPagina.page != null) {
+        setState(() {
+          _paginaActual = _controladorPagina.page!.round();
+        });
+      }
+    });
+  }
+
+  Future<void> _cargarCuentas() async {
+    if (widget.user == null) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+   
+    final response = await _cuentaRepo.getCuentaByUsuario(widget.user!.idUser);
+    setState(() {
+      _cuentas = response.data ?? [];
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controladorPagina.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 220,
-      child: Stack(
-        children: [
-          Container(
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_cuentas.isEmpty) {
+      return const Center(child: Text('No hay cuentas registradas'));
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 220,
+          width: 400,
+          child: PageView.builder(
+            controller: _controladorPagina,
+            itemCount: _cuentas.length,
+            itemBuilder: (context, index) {
+              final cuenta = _cuentas[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: _TarjetaIndividual(
+                  titulo: cuenta.nombreCuenta ?? 'Sin nombre',
+                  monto: 'S/${cuenta.saldo?.toStringAsFixed(2) ?? "0.00"}',
+                  tipo: 'Cuenta general',
+                  colorFondo: AppColors.Verde70,
+                  colorRecorte: const Color(0xFFF95B51),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+        _buildIndicadorPagina(),
+      ],
+    );
+  }
+
+  Widget _buildIndicadorPagina() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(_cuentas.length, (index) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: _paginaActual == index ? 24.0 : 8.0,
+          height: 8.0,
+          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: _paginaActual == index
+                ? AppColors.Verde70
+                : Colors.grey.withOpacity(0.5),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class _TarjetaIndividual extends StatelessWidget {
+  final String titulo;
+  final String monto;
+  final String tipo;
+  final Color colorFondo;
+  final Color colorRecorte;
+
+  const _TarjetaIndividual({
+    required this.titulo,
+    required this.monto,
+    required this.tipo,
+    required this.colorFondo,
+    required this.colorRecorte,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: colorFondo,
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        ClipPath(
+          clipper: _RecortadorTarjeta(),
+          child: Container(
+            padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
-              color: AppColors.Verde70,
+              color: colorRecorte,
               borderRadius: BorderRadius.circular(25),
             ),
-          ),
-          ClipPath(
-            clipper: _RecortadorTarjeta(),
-            child: Container(
-              padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF95B51),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'S/10,000',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const Text('Total Ahorrado', style: TextStyle(color: Colors.white70)),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Text("BCP", style: TextStyle(color: Colors.white, fontSize: 12)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 20,
-            right: 25,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('VISA', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 24, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-                const SizedBox(height: 0),
+                Text(
+                  monto,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  titulo,
+                  style: const TextStyle(color: Colors.white70),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    tipo,
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
               ],
             ),
           ),
-          Positioned(
-            top: 20,
-            right: 25,
-            child: Text('07/11/2025', style: TextStyle(color: Colors.white.withOpacity(0.7))),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

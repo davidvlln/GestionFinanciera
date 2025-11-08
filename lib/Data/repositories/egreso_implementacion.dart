@@ -1,3 +1,6 @@
+import 'package:Caney/Data/models/cuenta_model.dart';
+import 'package:Caney/Data/models/usuario_model.dart';
+import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/egreso_model.dart';
 import '../services/egreso_service.dart';
@@ -26,7 +29,7 @@ class EgresoImp implements IEgresoServ {
   @override
   Future<EgresoResponse> createEgreso(Egreso egreso) async {
     try {
-      // 1️⃣ Insertar el egreso
+     
       final response = await dataSource
           .from('Egresos')
           .insert(egreso.toJson())
@@ -35,7 +38,7 @@ class EgresoImp implements IEgresoServ {
 
       final nuevoEgreso = Egreso.fromJson(response);
 
-      // 2️⃣ Obtener saldo actual
+    
       final cuentaData = await dataSource
           .from('Cuenta')
           .select('Saldo')
@@ -45,7 +48,7 @@ class EgresoImp implements IEgresoServ {
       double saldoActual = (cuentaData['Saldo'] as num?)?.toDouble() ?? 0.0;
       double nuevoSaldo = saldoActual - (egreso.monto ?? 0.0);
 
-      // 3️⃣ Actualizar cuenta
+      
       await dataSource
           .from('Cuenta')
           .update({'Saldo': nuevoSaldo})
@@ -152,4 +155,37 @@ class EgresoImp implements IEgresoServ {
       );
     }
   }
+
+@override
+Future<EgresoResponse> getEgresosPorUsuarioCuenta(Cuenta cuentaUser) async {
+  try {
+   
+    final egresoData = await dataSource
+        .from('Egresos')
+        .select()
+        .eq('idCuenta', cuentaUser.idCuenta);
+
+    
+    final lista = (egresoData as List)
+        .map((e) => Egreso.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    debugPrint('Egresos obtenidos: $lista');
+  
+   
+    return EgresoResponse(
+      data: lista,
+      message: 'success',
+    );
+  } catch (error, stackTrace) {
+    debugPrint('Error al traer egresos: $error');
+    return EgresoResponse(
+      data: null,
+      message: 'Error al traer egresos: $error',
+    );
+  }
+}
+
+
+
 }

@@ -6,6 +6,8 @@ import 'pantalla_registro.dart';
 import 'package:Caney/generated/assets.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
 import '../../../Data/repositories/usuario_implementacion.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PantallaAcceso extends StatefulWidget {
   const PantallaAcceso({super.key});
@@ -16,7 +18,7 @@ class PantallaAcceso extends StatefulWidget {
 
 class _PantallaAccesoState extends State<PantallaAcceso> {
   final _formKey = GlobalKey<FormState>();
-  Usuario usuario = Usuario();  
+  Usuario usuario = Usuario();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -25,6 +27,80 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> loginWithGoogle(BuildContext context) async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: AppColors.Verde70)),
+      );
+
+      final signIn = GoogleSignIn.instance;
+
+      await signIn.initialize(
+        clientId:
+            '725764042049-4eis5c81g3m2icmt95avdosm2hduu79o.apps.googleusercontent.com', // Android
+        serverClientId:
+            '725764042049-sth5r87o97epq1ud61avudcahjnqbc3s.apps.googleusercontent.com', // Web
+      );
+
+      final googleUser = await signIn.authenticate();
+
+      final auth = googleUser.authentication;
+
+      final response = await Supabase.instance.client.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: auth.idToken!,
+        accessToken: auth.idToken!,
+      );
+
+      if (context.mounted) Navigator.pop(context);
+
+      if (response.session != null) {
+        final usuarioRepo = UsuarioImp();
+        final usuarioResponse = await usuarioRepo.createUsuarioDesdeAuth();
+
+        final usuarioDB = usuarioResponse.data as Usuario?;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Bienvenido ${usuarioDB?.nombres ?? googleUser.displayName ?? 'Usuario'}!',
+            ),
+            backgroundColor: AppColors.Verde70,
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PantallaPrincipalApp(
+              user:
+                  usuarioDB ??
+                  Usuario(
+                    nombres: googleUser.displayName,
+                    correo: googleUser.email,
+                  ),
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al iniciar sesión con Google.'),
+            backgroundColor: AppColors.Rojo70,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.Rojo70),
+      );
+    }
   }
 
   @override
@@ -63,7 +139,6 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                 ],
               ),
             ),
-
             DraggableScrollableSheet(
               initialChildSize: 0.75,
               minChildSize: 0.75,
@@ -83,7 +158,6 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                       controller: scrollController,
                       padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                       children: [
-                        // Handle para indicar que es deslizable
                         Center(
                           child: Container(
                             height: 5,
@@ -106,7 +180,6 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
                           decoration: _buildInputDecoration(
                             hintText: 'Usuario o Correo',
                             icon: Icons.email_outlined,
@@ -114,10 +187,6 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Por favor, ingresa tu usuario o correo';
-                            }
-                            if (value.contains('@') &&
-                                !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                              return 'Por favor, ingresa un correo válido';
                             }
                             return null;
                           },
@@ -135,20 +204,10 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                               return 'Por favor, ingresa tu contraseña';
                             }
                             if (value.length < 6) {
-                              return 'La contraseña debe tener al menos 6 caracteres';
+                              return 'Debe tener al menos 6 caracteres';
                             }
                             return null;
                           },
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Olvidaste tu contraseña?',
-                              style: TextStyle(color: AppColors.Rojo70),
-                            ),
-                          ),
                         ),
                         const SizedBox(height: 10),
                         BotonPrincipal(
@@ -156,77 +215,94 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               final usuarioRepo = UsuarioImp();
-                              final nameOrEmail = _emailController.text
-                                  .trim();
-                              final password = _passwordController.text
-                                  .trim();
+                              final nameOrEmail = _emailController.text.trim();
+                              final password = _passwordController.text.trim();
 
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) =>  Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.Verde70,
-                                      ),
-                                    ),
-                                  );
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) => Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.Verde70,
+                                  ),
+                                ),
+                              );
 
                               final response = await usuarioRepo
                                   .getValidarUsuario(nameOrEmail, password);
 
                               if (context.mounted) Navigator.pop(context);
 
-                                  if (response.data != null) {
-                                   
+                              if (response.data != null) {
+                                usuario = response.data;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Bienvenido ${usuario.nombres ?? usuario.correo}!',
+                                    ),
+                                    backgroundColor: AppColors.Verde70,
+                                  ),
+                                );
 
-                                    usuario = response.data;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Bienvenido ${usuario.nombres ?? usuario.correo}!',
-                                        ),
-                                        backgroundColor: AppColors.Verde70,
-                                      ),
-                                    );
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        PantallaPrincipalApp(user: usuario),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      response.message ??
+                                          'Credenciales inválidas',
+                                    ),
+                                    backgroundColor: AppColors.Rojo70,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
 
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                             PantallaPrincipalApp(user:usuario),
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          response.message ??
-                                              'Credenciales inválidas',
-                                        ),
-                                        backgroundColor: AppColors.Rojo70,
-                                      ),
-                                    );
-                                  }
-                                }
-                              },
+                        // 🔹 Botón de Google debajo
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          onPressed: () => loginWithGoogle(context),
+                          icon: Image.asset(
+                            'assets/img/google.png',
+                            width: 24,
+                            height: 24,
+                          ),
+                          label: const Text('Continuar con Google'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black87,
+                            minimumSize: const Size(double.infinity, 55),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
+                            elevation: 1,
+                          ),
+                        ),
 
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Aun no tienes una cuenta?"),
+                            const Text("¿Aún no tienes cuenta?"),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).push(
+                                Navigator.push(
+                                  context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                    const PantallaRegistro(),
+                                    builder: (_) => const PantallaRegistro(),
                                   ),
                                 );
                               },
                               child: const Text(
-                                'Registrate ahora',
+                                'Regístrate ahora',
                                 style: TextStyle(
                                   color: Color(0xFF169C88),
                                   fontWeight: FontWeight.bold,
@@ -247,13 +323,19 @@ class _PantallaAccesoState extends State<PantallaAcceso> {
     );
   }
 
-  InputDecoration _buildInputDecoration({required String hintText, required IconData icon}) {
+  InputDecoration _buildInputDecoration({
+    required String hintText,
+    required IconData icon,
+  }) {
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(icon, color: Colors.grey),
       filled: true,
       fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 16.0,
+        horizontal: 20.0,
+      ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
         borderSide: BorderSide.none,

@@ -1,3 +1,4 @@
+import 'package:Caney/Data/models/usuario_model.dart';
 import 'package:Caney/Presentation/pantallas/app/pantalla_gastos.dart';
 import 'package:flutter/material.dart';
 import 'package:Caney/Core/utils/app_colors.dart';
@@ -8,7 +9,8 @@ import '../../componentes/inicio/tarjeta_ingresos.dart';
 import '../../componentes/inicio/item_transaccion.dart';
 
 class PantallaInicioApp extends StatelessWidget {
-  const PantallaInicioApp({super.key});
+  final Usuario? user;
+  const PantallaInicioApp({super.key,this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class PantallaInicioApp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 0),
-              const TarjetaCredito(),
+              TarjetaCredito(user:user),
               const SizedBox(height: 30),
               CabeceraSeccion(titulo: 'Dinero Estructurado', colorTexto: AppColors.Negro100, verMas: false),
               const SizedBox(height: 15),

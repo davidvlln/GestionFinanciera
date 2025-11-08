@@ -19,13 +19,22 @@ class TarjetaPlan extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Mi Plan de Hoy',
+                  'Comprar Computadora',
                   style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
-                Text(
-                  '4 de 5 completados',
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                Row(
+                  children: [
+                    Text(
+                      'S/4 060.00',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                    const Text(' de ', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                    Text(
+                      'S/6 110.00',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -45,7 +54,7 @@ class TarjetaPlan extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           CircularProgressIndicator(
-            value: 0.75, // 75% de progreso
+            value: 0.75,
             strokeWidth: 8,
             backgroundColor: Colors.white.withOpacity(0.3),
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
