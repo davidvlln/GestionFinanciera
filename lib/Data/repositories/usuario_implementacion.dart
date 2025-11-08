@@ -1,4 +1,4 @@
-import 'package:gestfinan/Data/models/usuario_model.dart';
+import 'package:Caney/Data/models/usuario_model.dart';
 import '../services/usuario_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../Core/errors/error_common.dart';
